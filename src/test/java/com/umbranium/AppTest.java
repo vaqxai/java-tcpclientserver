@@ -19,7 +19,7 @@ public class AppTest
     }
 
     /**
-     * Create client & server, then check if they communicate correctly.
+     * Create client & server, then check if they communicate
      */
     @Test
     public void testClientServer(){
