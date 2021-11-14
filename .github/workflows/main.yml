@@ -1,0 +1,31 @@
+name: docs
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ '**.java' ]
+
+jobs:
+  api-website:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Set up the Java JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Build docs with Maven
+      run: mvn javadoc:javadoc
+    
+    - name: Commit documentation changes
+      run: |
+        if [[ `git status --porcelain` ]]; then
+          git config --global user.name 'Umbra'
+          git config --global user.email 'umbranium@users.noreply.github.com'
+          git add -A
+          git commit -m "Automated API website updates."
+        fi
