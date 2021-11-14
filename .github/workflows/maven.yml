@@ -26,4 +26,11 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Generate docs
       run: mvn javadoc:javadoc
-
+    - name: Commit documentation changes
+      run: |
+        if [[ `git status --porcelain` ]]; then
+          git config --global user.name 'umbranium'
+          git config --global user.email 'vakkendwarf@gmail.com'
+          git add -A
+          git commit -m "autogenerate docs"
+        fi
