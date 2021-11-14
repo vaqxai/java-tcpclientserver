@@ -37,6 +37,7 @@ public class TCPClient {
 	/**
 	 * Gives you the local port automatically assigned to create the connection.
 	 * @return the local port you used to make the connection.
+	 * @since 1.0.3
 	 */
 	public int GetOwnPort(){
 		return socket.getLocalPort();
@@ -45,6 +46,7 @@ public class TCPClient {
 	/**
 	 * Gives you the current socket for direct interaction.
 	 * @return the socket
+	 * @since 1.0.3
 	 */
 	public Socket GetSocket(){
 		return socket;
@@ -53,6 +55,7 @@ public class TCPClient {
 	/**
 	 * In silent mode, only errors are printed.
 	 * @param shouldBeSilent true to enable, false to disable.
+	 * @since 1.0.3
 	 */
 	public void setSilentMode(boolean shouldBeSilent){
 		this.silentMode = shouldBeSilent;

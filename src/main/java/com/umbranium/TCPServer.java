@@ -27,6 +27,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	/**
 	 * Gives you the current serverSocket for direct interaction
 	 * @return the socket
+	 * @since 1.0.3
 	 */
 	public ServerSocket GetSocket(){
 		return this.server;
@@ -43,6 +44,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	/**
 	 * Changes the response callback to a specified function
 	 * @param newCallback new function to set the callback to
+	 * @since 1.0.3
 	 */
 	public void setResponseCallback(Function<String,String> newCallback){
 		this.responseCallback = newCallback;
@@ -51,6 +53,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	/**
 	 * In silent mode, the server will only print errors.
 	 * @param shouldBeSilent true to enable, false to disable
+	 * @since 1.0.3
 	 */
 	public void setSilentMode(boolean shouldBeSilent){
 		this.silentMode = shouldBeSilent;
