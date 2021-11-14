@@ -18,6 +18,10 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
+    - name: Delete old docs
+      run: |
+        rm -rf docs
+
     - name: Build docs with Maven
       run: mvn javadoc:javadoc
     
