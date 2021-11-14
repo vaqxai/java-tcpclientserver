@@ -12,6 +12,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	private int port;
 	private Function<String, String> responseCallback;
 	private ServerSocket server = null;
+	private boolean silentMode = false;
 
 	/**
 	 * Creates a server instance, one which will reply to all incoming requests putting them through the given callback function
@@ -23,19 +24,53 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 		this.responseCallback = responseCallback;
 	}
 
+	/**
+	 * Gives you the current serverSocket for direct interaction
+	 * @return the socket
+	 */
+	public ServerSocket GetSocket(){
+		return this.server;
+	}
+
+	/**
+	 * Gives you the current listening port
+	 * @return the port
+	 */
+	public int GetPort(){
+		return this.port;
+	}
+
+	/**
+	 * Changes the response callback to a specified function
+	 * @param newCallback new function to set the callback to
+	 */
+	public void setResponseCallback(Function<String,String> newCallback){
+		this.responseCallback = newCallback;
+	}
+	
+	/**
+	 * In silent mode, the server will only print errors.
+	 * @param shouldBeSilent true to enable, false to disable
+	 */
+	public void setSilentMode(boolean shouldBeSilent){
+		this.silentMode = shouldBeSilent;
+	}
+
 	public void run(){
 
 		try {
 			server = new ServerSocket(port);
 			server.setReuseAddress(true);
 
-			System.out.println("SERVER START");
+			if(!silentMode)
+				System.out.println("SERVER START");
 
 			while(true){
 
 				Socket client = server.accept();
 
-				System.out.println(String.format("CLIENT CONN [%s]", client.getInetAddress().getHostAddress()));
+				if(!silentMode)
+					System.out.println(String.format("CLIENT CONN [%s]", client.getInetAddress().getHostAddress()));
 
 				ClientHandler clientSock = new ClientHandler(client, responseCallback); // we forward the function to each client handler we create
 

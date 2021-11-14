@@ -11,6 +11,7 @@ public class TCPClient {
 	private Socket socket = null;
 	private BufferedReader input = null;
 	private PrintWriter output = null;
+	private boolean silentMode = false;
 
 	/**
 	 * Creates the client instance, needs to connect to a specified server.
@@ -21,7 +22,9 @@ public class TCPClient {
 
 		try {
 			socket = new Socket(address, port);
-			System.out.println("CONNECTED");
+
+			if(!silentMode)
+				System.out.println("CLIENT START");
 
 			output = new PrintWriter(socket.getOutputStream(), true);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -37,6 +40,22 @@ public class TCPClient {
 	 */
 	public int GetOwnPort(){
 		return socket.getLocalPort();
+	}
+
+	/**
+	 * Gives you the current socket for direct interaction.
+	 * @return the socket
+	 */
+	public Socket GetSocket(){
+		return socket;
+	}
+
+	/**
+	 * In silent mode, only errors are printed.
+	 * @param shouldBeSilent true to enable, false to disable.
+	 */
+	public void setSilentMode(boolean shouldBeSilent){
+		this.silentMode = shouldBeSilent;
 	}
 
 	/**
