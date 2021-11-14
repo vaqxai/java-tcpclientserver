@@ -29,7 +29,6 @@ jobs:
         mvn javadoc:javadoc
         git config --global user.name 'umbranium'
         git config --global user.email 'vakkendwarf@gmail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git add -A
         git commit -m "autogenerate docs"
         git push
