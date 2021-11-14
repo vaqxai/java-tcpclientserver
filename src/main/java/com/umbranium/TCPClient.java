@@ -32,6 +32,14 @@ public class TCPClient {
 	}
 
 	/**
+	 * Gives you the local port automatically assigned to create the connection.
+	 * @return the local port you used to make the connection.
+	 */
+	public int GetOwnPort(){
+		return socket.getLocalPort();
+	}
+
+	/**
 	 * You can use this method to send a message to the server you have connected to.
 	 * @param message the message to be sent
 	 */

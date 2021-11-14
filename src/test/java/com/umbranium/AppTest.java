@@ -35,6 +35,8 @@ public class AppTest
 
         TCPClient tcpClient = new TCPClient("localhost", 4444);
         tcpClient.Send("Big Ass");
+
+        System.out.println(tcpClient.GetOwnPort());
         
         String response = tcpClient.Get();
 
