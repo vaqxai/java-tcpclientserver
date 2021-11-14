@@ -27,7 +27,6 @@ public class TCPClient {
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e){
 			System.out.println(e);
-			System.exit(1);
 		}
 
 	}
