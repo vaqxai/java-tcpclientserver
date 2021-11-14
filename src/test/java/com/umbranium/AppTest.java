@@ -18,6 +18,9 @@ public class AppTest
         assertTrue( true );
     }
 
+    /**
+     * Create client & server, then check if they communicate correctly.
+     */
     @Test
     public void testClientServer(){
 
