@@ -26,10 +26,13 @@ public class AppTest
     @Test
     public void testClientServer(){
 
-        TCPServer tcpServer = new TCPServer(4444);
-        new Thread(tcpServer).start(); // don't hold up rest of program.
+        System.out.println("testClientServer");
 
-        TCPClient tcpClient = new TCPClient("localhost", 4444);
+        TCPServer tcpServer = new TCPServer(5444);
+        Thread serverThread = new Thread(tcpServer); // don't hold up rest of program.
+        serverThread.start();
+
+        TCPClient tcpClient = new TCPClient("localhost", 5444);
         tcpClient.send("Big Ass");
 
         tcpServer.getAllClients().forEach(client -> {
@@ -45,6 +48,8 @@ public class AppTest
 
         assertTrue(response.equals("You have sent: Big Ass to our server."));
 
+        serverThread.interrupt();
+
     }
 
     /**
@@ -53,17 +58,20 @@ public class AppTest
     @Test
     public void sendToDisconnected(){
 
-        TCPServer tcpServer = new TCPServer(4444);
-        new Thread(tcpServer).start();
+        System.out.println("testsendDisconnected");
 
-        TCPClient client1 = new TCPClient("localhost",4444);
+        TCPServer tcpServer = new TCPServer(6444);
+        Thread serverThread = new Thread(tcpServer);
+        serverThread.start();
+
+        TCPClient client1 = new TCPClient("localhost",6444);
         client1.send("dupa");
         System.out.println("SENT!");
         try{
         client1.getSocket().close();
        
         for (int i = 0; i < 1000; i++){
-            client1.connect("localhost", 4444);
+            client1.connect("localhost", 6444);
             client1.getSocket().close();
         }
 
@@ -78,6 +86,8 @@ public class AppTest
 
         assertTrue(tcpServer.getAllClients().size() == (1001));
 
+        serverThread.interrupt();
+
     }
 
     /**
@@ -86,14 +96,18 @@ public class AppTest
     @Test
     public void testServerSequential(){
 
-        TCPServer emulatorUczelni = new TCPServer(4445);
-        new Thread(emulatorUczelni).start();
+        System.out.println("testServerSequential");
 
-        TCPServer tcpServer = new TCPServer(4444);
-        new Thread(tcpServer).start(); // don't hold up rest of program.
+        TCPServer emulatorUczelni = new TCPServer(7445);
+        Thread serverThread1 = new Thread(emulatorUczelni);
+        serverThread1.start();
 
-        TCPClient messenger = new TCPClient("localhost",4445);
-        messenger.send("localhost" + ":" + 4444);
+        TCPServer tcpServer = new TCPServer(7444);
+        Thread serverThread2 = new Thread(tcpServer); // don't hold up rest of program.
+        serverThread2.start();
+
+        TCPClient messenger = new TCPClient("localhost",7445);
+        messenger.send("localhost" + ":" + 7444);
 
         TCPClient dummy = new TCPClient();
         emulatorUczelni.getAllClients().forEach(client -> {
