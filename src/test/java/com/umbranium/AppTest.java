@@ -77,6 +77,13 @@ public class AppTest
             client.send("Big ass");
         });
 
+        try{
+            System.out.println("Waiting for clients (10s)");
+            Thread.sleep(10000); // wait for clients
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+
         System.out.println("Done");
         System.out.println("Clients total: " + tcpServer.getAllClients().size());
 
