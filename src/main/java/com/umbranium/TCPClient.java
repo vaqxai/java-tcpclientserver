@@ -24,6 +24,7 @@ public class TCPClient {
 			output = new PrintWriter(socket.getOutputStream(), true);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e){
+			System.out.println("While connecting to: " + address + ":" + port);
 			System.out.println(e);
 		}
 
