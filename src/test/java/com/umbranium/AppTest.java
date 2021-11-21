@@ -29,8 +29,7 @@ public class AppTest
         System.out.println("testClientServer");
 
         TCPServer tcpServer = new TCPServer(5444);
-        Thread serverThread = new Thread(tcpServer); // don't hold up rest of program.
-        serverThread.start();
+        new Thread(tcpServer).start(); // don't hold up rest of program.
 
         TCPClient tcpClient = new TCPClient("localhost", 5444);
         tcpClient.send("Big Ass");
@@ -48,8 +47,6 @@ public class AppTest
 
         assertTrue(response.equals("You have sent: Big Ass to our server."));
 
-        serverThread.interrupt();
-
     }
 
     /**
@@ -61,8 +58,7 @@ public class AppTest
         System.out.println("testsendDisconnected");
 
         TCPServer tcpServer = new TCPServer(6444);
-        Thread serverThread = new Thread(tcpServer);
-        serverThread.start();
+        new Thread(tcpServer).start();
 
         TCPClient client1 = new TCPClient("localhost",6444);
         client1.send("dupa");
@@ -86,8 +82,6 @@ public class AppTest
 
         assertTrue(tcpServer.getAllClients().size() == (1001));
 
-        serverThread.interrupt();
-
     }
 
     /**
@@ -99,12 +93,10 @@ public class AppTest
         System.out.println("testServerSequential");
 
         TCPServer emulatorUczelni = new TCPServer(7445);
-        Thread serverThread1 = new Thread(emulatorUczelni);
-        serverThread1.start();
+        new Thread(emulatorUczelni).start();
 
         TCPServer tcpServer = new TCPServer(7444);
-        Thread serverThread2 = new Thread(tcpServer); // don't hold up rest of program.
-        serverThread2.start();
+        new Thread(tcpServer).start(); // don't hold up rest of program.
 
         TCPClient messenger = new TCPClient("localhost",7445);
         messenger.send("localhost" + ":" + 7444);
