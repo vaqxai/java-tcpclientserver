@@ -35,8 +35,12 @@ public class AppTest
         tcpClient.send("Big Ass");
 
         tcpServer.getAllClients().forEach(client -> {
+            try{
             System.out.println("Server response");
             client.send(String.format("You have sent: %s to our server.", client.get()));
+            } catch (Exception e) {
+                System.out.println("Tried to send to client, but: " + e);
+            }
         });
 
         System.out.println(tcpClient.getOwnPort());
