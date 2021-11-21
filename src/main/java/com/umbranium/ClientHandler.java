@@ -14,7 +14,6 @@ public class ClientHandler implements Runnable {
 	/**
 	 * Creates a ClientHandler with the provided server socket, and a response callback.
 	 * @param socket the connected client's socket instance
-	 * @param responseCallback the {@link java.util.function.Function} which accepts a String and returns a String to be ran on every incoming message.
 	 */
 	public ClientHandler(Socket socket){
 		this.clientSocket = socket;
