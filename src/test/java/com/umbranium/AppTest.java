@@ -66,7 +66,7 @@ public class AppTest
         try{
         client1.getSocket().close();
        
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 100; i++){
             client1.connect("0.0.0.0", 6444);
             client1.getSocket().close();
         }
