@@ -64,7 +64,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 			server.setReuseAddress(true);
 
 			if(!silentMode)
-				System.out.println("SERVER START");
+				System.out.println("SERVER START [" + server.getLocalPort() + "]");
 
 			while(true){
 
