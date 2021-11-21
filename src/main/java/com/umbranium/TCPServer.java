@@ -78,6 +78,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 				this.connectedClients.add(clientSock);
 
 			}
+
 		} catch (IOException e) {
 			System.out.println(e);
 		}

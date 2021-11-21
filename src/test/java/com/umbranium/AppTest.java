@@ -121,15 +121,38 @@ public class AppTest
             client.send(String.valueOf(tcpServer.getAllClients().size()));
         });
 
+        /*
         tcpServer.getAllClients().forEach(client -> {
             client.send(tcpServer.getPort());
         });
 
         tcpServer.getAllClients().forEach(client -> {
+            client.send(client.get().replaceAll("1",""));
+        });
 
+        tcpServer.getAllClients().forEach(client -> {
+            int x = Integer.parseInt(client.get());
+            int n = 1;
+            while(Math.pow(n+1,4) <= x){
+                n++;
+            }
+            client.send(n);
+        });
+
+        tcpServer.getAllClients().forEach(client -> {
+            int sum = 0;
+            for(int i = 0; i < 3; i++){
+                sum += Integer.parseInt(client.get());
+            }
+            client.send(sum);
+        });
+
+        tcpServer.getAllClients().forEach(client ->{
+            System.out.println(client.get()); // finalna flaga
         });
 
         System.out.println(dummy.get());
+        */
 
     }
 }
