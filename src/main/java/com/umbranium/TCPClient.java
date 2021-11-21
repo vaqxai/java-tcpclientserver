@@ -13,12 +13,7 @@ public class TCPClient {
 	private PrintWriter output = null;
 	private boolean silentMode = false;
 
-	/**
-	 * Creates the client instance, needs to connect to a specified server.
-	 * @param address Server's IPv4 address
-	 * @param port Server's port
-	 */
-	public TCPClient(String address, int port){
+	public void connect(String address, int port){
 
 		try {
 			socket = new Socket(address, port);
@@ -35,11 +30,25 @@ public class TCPClient {
 	}
 
 	/**
+	 * Creates the client instance, needs to connect to a specified server.
+	 * @param address Server's IPv4 address
+	 * @param port Server's port
+	 */
+	public TCPClient(String address, int port){
+		connect(address, port);
+	}
+
+	/**
+	* Unconnected constructor
+	*/
+	public TCPClient(){};
+
+	/**
 	 * Gives you the local port automatically assigned to create the connection.
 	 * @return the local port you used to make the connection.
 	 * @since 1.0.3
 	 */
-	public int GetOwnPort(){
+	public int getOwnPort(){
 		return socket.getLocalPort();
 	}
 
@@ -48,7 +57,7 @@ public class TCPClient {
 	 * @return the socket
 	 * @since 1.0.3
 	 */
-	public Socket GetSocket(){
+	public Socket getSocket(){
 		return socket;
 	}
 
@@ -65,15 +74,15 @@ public class TCPClient {
 	 * You can use this method to send a message to the server you have connected to.
 	 * @param message the message to be sent
 	 */
-	public void Send(String message){
-		output.println(message);
+	public void send(Object message){
+		output.println(String.valueOf(message));
 	}
 
 	/**
 	 * You can use this method to grab the next line of buffered server response.
 	 * @return the next Line from server feedback
 	 */
-	public String Get(){
+	public String get(){
 		try{
 			return input.readLine();
 		} catch (IOException e) {

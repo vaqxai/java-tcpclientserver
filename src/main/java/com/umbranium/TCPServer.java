@@ -2,7 +2,7 @@ package com.umbranium;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.function.*;
+import java.util.ArrayList;
 
 /**
 * TCPServer is a multithreaded ServerSocket wrapper that can respond to requests from multiple clients at once, using a predetermined callback.
@@ -10,18 +10,17 @@ import java.util.function.*;
 public class TCPServer implements Runnable { // runnable so it doesn't block rest of program.
 
 	private int port;
-	private Function<String, String> responseCallback;
 	private ServerSocket server = null;
 	private boolean silentMode = false;
+	private ArrayList<ClientHandler> connectedClients = new ArrayList<>();
 
 	/**
 	 * Creates a server instance, one which will reply to all incoming requests putting them through the given callback function
 	 * @param port the port on which to create the server
 	 * @param responseCallback a {@link java.util.function.Function} accepting a String and returning a String, it is called with every request message the server receives.
 	 */
-	public TCPServer(int port, Function<String, String> responseCallback){ // we set up a server that will respond to messages using a given function
+	public TCPServer(int port){ // we set up a server that will respond to messages using a given function
 		this.port = port;
-		this.responseCallback = responseCallback;
 	}
 
 	/**
@@ -34,20 +33,20 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	}
 
 	/**
-	 * Gives you the current listening port
-	 * @return the port
+	 * 
+	 * @return all connected clients
+	 * @since 1.1.0
 	 */
-	public int GetPort(){
-		return this.port;
+	public ArrayList<ClientHandler> getAllClients(){
+		return this.connectedClients;
 	}
 
 	/**
-	 * Changes the response callback to a specified function
-	 * @param newCallback new function to set the callback to
-	 * @since 1.0.3
+	 * 
+	 * @return current listening port
 	 */
-	public void setResponseCallback(Function<String,String> newCallback){
-		this.responseCallback = newCallback;
+	public int GetPort(){
+		return this.port;
 	}
 	
 	/**
@@ -75,9 +74,9 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 				if(!silentMode)
 					System.out.println(String.format("CLIENT CONN [%s]", client.getInetAddress().getHostAddress()));
 
-				ClientHandler clientSock = new ClientHandler(client, responseCallback); // we forward the function to each client handler we create
-
+				ClientHandler clientSock = new ClientHandler(client); // we forward the function to each client handler we create
 				new Thread(clientSock).start();
+				this.connectedClients.add(clientSock);
 
 			}
 		} catch (IOException e) {

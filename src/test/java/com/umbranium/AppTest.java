@@ -1,7 +1,9 @@
 package com.umbranium;
 
 import static org.junit.Assert.assertTrue;
-import java.util.function.*;
+
+import java.io.IOException;
+
 import org.junit.Test;
 
 /**
@@ -24,25 +26,100 @@ public class AppTest
     @Test
     public void testClientServer(){
 
-        Function<String, String> responseCallback = new Function<String, String>(){
-            public String apply (String input){
-                return "You have sent: " + input + " to our server."; // TODO: Escape dangerous characters from input.
-            }
-        };
-
-        TCPServer tcpServer = new TCPServer(4444, responseCallback);
+        TCPServer tcpServer = new TCPServer(4444);
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
         TCPClient tcpClient = new TCPClient("localhost", 4444);
-        tcpClient.Send("Big Ass");
+        tcpClient.send("Big Ass");
 
-        System.out.println(tcpClient.GetOwnPort());
+        tcpServer.getAllClients().forEach(client -> {
+            System.out.println("Server response");
+            client.send(String.format("You have sent: %s to our server.", client.get()));
+        });
+
+        System.out.println(tcpClient.getOwnPort());
         
-        String response = tcpClient.Get();
+        String response = tcpClient.get();
 
         System.out.println(response);
 
         assertTrue(response.equals("You have sent: Big Ass to our server."));
+
+    }
+
+    /**
+     * Can you send to a disconnected client?
+     */
+    @Test
+    public void sendToDisconnected(){
+
+        TCPServer tcpServer = new TCPServer(4444);
+        new Thread(tcpServer).start();
+
+        TCPClient client1 = new TCPClient("localhost",4444);
+        client1.send("dupa");
+        System.out.println("SENT!");
+        try{
+        client1.getSocket().close();
+       
+        for (int i = 0; i < 1000; i++){
+            client1.connect("localhost", 4444);
+            client1.getSocket().close();
+        }
+
+        } catch (IOException e){}
+
+        tcpServer.getAllClients().forEach(client -> {
+            client.send("Big ass");
+        });
+
+        System.out.println("Done");
+        System.out.println("Clients total: " + tcpServer.getAllClients().size());
+
+        assertTrue(tcpServer.getAllClients().size() == (1001));
+
+    }
+
+    /**
+     * Create seq server
+     */
+    @Test
+    public void testServerSequential(){
+
+        TCPServer emulatorUczelni = new TCPServer(4445);
+        new Thread(emulatorUczelni).start();
+
+        TCPServer tcpServer = new TCPServer(4444);
+        new Thread(tcpServer).start(); // don't hold up rest of program.
+
+        TCPClient messenger = new TCPClient("localhost",4445);
+        messenger.send("localhost" + ":" + 4444);
+
+        TCPClient dummy = new TCPClient();
+        emulatorUczelni.getAllClients().forEach(client -> {
+            String response = client.get();
+            System.out.println("Response: " + response);
+            String address = response.split(":")[0];
+            int port = Integer.parseInt(response.split(":")[1]);
+
+            dummy.connect(address, port);
+            dummy.send("Dupa");
+            System.out.println("Sent!");
+        });
+
+        tcpServer.getAllClients().forEach(client -> {
+            client.send(client.get());
+        });
+
+        tcpServer.getAllClients().forEach(client -> {
+            client.send(String.valueOf(tcpServer.getAllClients().size()));
+        });
+
+        tcpServer.getAllClients().forEach(client -> {
+            
+        });
+
+        System.out.println(dummy.get());
 
     }
 }
