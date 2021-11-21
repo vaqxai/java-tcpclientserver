@@ -116,7 +116,11 @@ public class AppTest
         });
 
         tcpServer.getAllClients().forEach(client -> {
-            
+            client.send(tcpServer.getPort());
+        });
+
+        tcpServer.getAllClients().forEach(client -> {
+
         });
 
         System.out.println(dummy.get());
