@@ -15,17 +15,27 @@ public class TCPClient {
 
 	public void connect(String address, int port){
 
-		try {
-			socket = new Socket(address, port);
+		while(true){
+			try {
+				socket = new Socket(address, port);
 
-			if(!silentMode)
-				System.out.println("CLIENT START");
+				if(!silentMode)
+					System.out.println("CLIENT START");
 
-			output = new PrintWriter(socket.getOutputStream(), true);
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e){
-			System.out.println("While connecting to: " + address + ":" + port);
-			System.out.println(e);
+				output = new PrintWriter(socket.getOutputStream(), true);
+				input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				break;
+			} catch (IOException e){
+				System.out.println("While connecting to: " + address + ":" + port);
+				System.out.println(e);
+				System.out.println("Retrying in 5s");
+				try{
+				Thread.sleep(5000);
+				} catch (InterruptedException f){
+					System.out.println(f);
+					break;
+				}
+			}
 		}
 
 	}
