@@ -28,10 +28,10 @@ public class AppTest
 
         System.out.println("testClientServer");
 
-        TCPServer tcpServer = new TCPServer(5444);
+        TCPServer tcpServer = new TCPServer(4447);
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
-        TCPClient tcpClient = new TCPClient("localhost", 5444);
+        TCPClient tcpClient = new TCPClient("localhost", 4447);
         tcpClient.send("Big Ass");
 
         tcpServer.getAllClients().forEach(client -> {
