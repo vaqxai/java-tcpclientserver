@@ -17,7 +17,6 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	/**
 	 * Creates a server instance, one which will reply to all incoming requests putting them through the given callback function
 	 * @param port the port on which to create the server
-	 * @param responseCallback a {@link java.util.function.Function} accepting a String and returning a String, it is called with every request message the server receives.
 	 */
 	public TCPServer(int port){ // we set up a server that will respond to messages using a given function
 		this.port = port;
