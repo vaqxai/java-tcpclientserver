@@ -27,7 +27,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	 * @return the socket
 	 * @since 1.0.3
 	 */
-	public ServerSocket GetSocket(){
+	public ServerSocket getSocket(){
 		return this.server;
 	}
 
@@ -44,7 +44,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	 * 
 	 * @return current listening port
 	 */
-	public int GetPort(){
+	public int getPort(){
 		return this.port;
 	}
 	
