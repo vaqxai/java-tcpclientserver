@@ -31,7 +31,7 @@ public class AppTest
         TCPServer tcpServer = new TCPServer(4447);
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
-        TCPClient tcpClient = new TCPClient("localhost", 4447);
+        TCPClient tcpClient = new TCPClient("0.0.0.0", 4447);
         tcpClient.send("Big Ass");
 
         tcpServer.getAllClients().forEach(client -> {
@@ -60,14 +60,14 @@ public class AppTest
         TCPServer tcpServer = new TCPServer(6444);
         new Thread(tcpServer).start();
 
-        TCPClient client1 = new TCPClient("localhost",6444);
+        TCPClient client1 = new TCPClient("0.0.0.0",6444);
         client1.send("dupa");
         System.out.println("SENT!");
         try{
         client1.getSocket().close();
        
         for (int i = 0; i < 1000; i++){
-            client1.connect("localhost", 6444);
+            client1.connect("0.0.0.0", 6444);
             client1.getSocket().close();
         }
 
@@ -98,8 +98,8 @@ public class AppTest
         TCPServer tcpServer = new TCPServer(7444);
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
-        TCPClient messenger = new TCPClient("localhost",7445);
-        messenger.send("localhost" + ":" + 7444);
+        TCPClient messenger = new TCPClient("0.0.0.0",7445);
+        messenger.send("0.0.0.0" + ":" + 7444);
 
         TCPClient dummy = new TCPClient();
         emulatorUczelni.getAllClients().forEach(client -> {
