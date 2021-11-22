@@ -1,4 +1,4 @@
-package com.umbranium;
+package io.github.umbranium;
 
 import java.io.*;
 import java.net.*;

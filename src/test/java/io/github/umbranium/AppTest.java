@@ -1,4 +1,4 @@
-package com.umbranium;
+package io.github.umbranium;
 
 import static org.junit.Assert.assertTrue;
 

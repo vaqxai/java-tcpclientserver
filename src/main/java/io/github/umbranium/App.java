@@ -1,4 +1,4 @@
-package com.umbranium;
+package io.github.umbranium;
 
 /**
  * Hello world!
