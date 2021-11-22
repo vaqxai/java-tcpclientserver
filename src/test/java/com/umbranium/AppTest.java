@@ -117,6 +117,14 @@ public class AppTest
         messenger.send("0.0.0.0" + ":" + 7444);
 
         TCPClient dummy = new TCPClient();
+
+        try{
+            System.out.println("Waiting for clients (10s)");
+            Thread.sleep(10000); // wait for clients
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+
         emulatorUczelni.getAllClients().forEach(client -> {
             String response = client.get();
             System.out.println("Response: " + response);
