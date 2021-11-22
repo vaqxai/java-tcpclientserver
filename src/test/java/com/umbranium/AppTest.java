@@ -87,7 +87,7 @@ public class AppTest
         System.out.println("Done");
         System.out.println("Clients total: " + tcpServer.getAllClients().size());
 
-        assertTrue(tcpServer.getAllClients().size() == (1001));
+        assertTrue(tcpServer.getAllClients().size() == (11));
 
     }
 
