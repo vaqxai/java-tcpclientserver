@@ -34,6 +34,13 @@ public class AppTest
         TCPClient tcpClient = new TCPClient("0.0.0.0", 4447);
         tcpClient.send("Big Ass");
 
+        try{
+            System.out.println("Waiting for clients (10s)");
+            Thread.sleep(10000); // wait for clients
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+
         tcpServer.getAllClients().forEach(client -> {
             System.out.println("Server response");
             String response = client.get();
