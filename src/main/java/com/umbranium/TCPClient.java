@@ -86,6 +86,12 @@ public class TCPClient {
 	 * @param message the message to be sent
 	 */
 	public void send(Object message){
+
+		if(output == null){
+			System.out.println("Can't send when unconnected! Connect first!");
+			return;
+		}
+
 		output.println(String.valueOf(message));
 	}
 
@@ -94,6 +100,12 @@ public class TCPClient {
 	 * @return the next Line from server feedback
 	 */
 	public String get(){
+		
+		if(output == null){
+			System.out.println("Can't receive when unconnected! Connect first!");
+			return "";
+		}
+
 		try{
 			return input.readLine();
 		} catch (IOException e) {
