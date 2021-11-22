@@ -36,7 +36,8 @@ public class AppTest
 
         tcpServer.getAllClients().forEach(client -> {
             System.out.println("Server response");
-            client.send(String.format("You have sent: %s to our server.", client.get()));
+            String response = client.get();
+            client.send(String.format("You have sent: %s to our server.", response));
         });
 
         System.out.println(tcpClient.getOwnPort());
