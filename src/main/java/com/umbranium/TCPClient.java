@@ -101,7 +101,7 @@ public class TCPClient {
 	 */
 	public String get(){
 		
-		if(output == null){
+		if(input == null){
 			System.out.println("Can't receive when unconnected! Connect first!");
 			return "";
 		}
