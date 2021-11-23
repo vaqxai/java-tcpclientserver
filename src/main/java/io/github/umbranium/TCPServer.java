@@ -3,6 +3,7 @@ package io.github.umbranium;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.function.*;
 
 /**
 * TCPServer is a multithreaded ServerSocket wrapper that can respond to requests from multiple clients at once, using a predetermined callback.
@@ -15,11 +16,28 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	private ArrayList<ClientHandler> connectedClients = new ArrayList<>();
 
 	/**
+	 * Default callback function for all clients. If you return "", no response will be sent back.
+	 */
+	private Function<String, String> callbackFunction = null;
+
+	/**
 	 * Creates a server instance, one which will reply to all incoming requests putting them through the given callback function
 	 * @param port the port on which to create the server
 	 */
 	public TCPServer(int port){ // we set up a server that will respond to messages using a given function
 		this.port = port;
+	}
+
+	/**
+	 * Changes the server's autoresponse
+	 * @param newCallback will be called whenever a client sends us a message. If you return "" no response will be sent back.
+	 */
+	public void setAutoResponse(Function<String, String> newCallback){
+		this.callbackFunction = newCallback;
+	}
+
+	public Function<String, String> getAutoResponse(){
+		return this.callbackFunction;
 	}
 
 	/**
@@ -73,7 +91,12 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 				if(!silentMode)
 					System.out.println(String.format("CLIENT CONN [%s]", client.getInetAddress().getHostAddress()));
 
-				ClientHandler clientSock = new ClientHandler(client); // we forward the function to each client handler we create
+				ClientHandler clientSock = new ClientHandler(client);
+
+				if(callbackFunction != null){
+					clientSock.setAutoResponse(callbackFunction);
+				}
+
 				new Thread(clientSock).start();
 				this.connectedClients.add(clientSock);
 

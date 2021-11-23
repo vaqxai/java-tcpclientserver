@@ -1,9 +1,7 @@
 package io.github.umbranium;
 
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-
 import org.junit.Test;
 
 /**
@@ -29,29 +27,19 @@ public class AppTest
         System.out.println("testClientServer");
 
         TCPServer tcpServer = new TCPServer(4447);
+        tcpServer.setAutoResponse(message -> {
+            return "You have sent: " + message + " to our server.";
+        });
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
-        TCPClient tcpClient = new TCPClient("0.0.0.0", 4447);
+        TCPClient tcpClient = new TCPClient("localhost", 4447);
         tcpClient.send("Big Ass");
 
-        try{
-            System.out.println("Waiting for clients (10s)");
-            Thread.sleep(10000); // wait for clients
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        }
-
-        tcpServer.getAllClients().forEach(client -> {
-            System.out.println("Server response");
-            String response = client.get();
-            client.send(String.format("You have sent: %s to our server.", response));
-        });
-
-        System.out.println(tcpClient.getOwnPort());
+        System.out.println("Client's port: " + tcpClient.getOwnPort());
         
         String response = tcpClient.get();
 
-        System.out.println(response);
+        System.out.println("Reponse the client got: " + response);
 
         assertTrue(response.equals("You have sent: Big Ass to our server."));
 
@@ -71,14 +59,13 @@ public class AppTest
         TCPClient client1 = new TCPClient("0.0.0.0",6444);
         client1.send("dupa");
         System.out.println("SENT!");
-        try{
-        client1.getSocket().close();
-       
-        for (int i = 0; i < 10; i++){
-            client1.connect("0.0.0.0", 6444);
-            client1.getSocket().close();
-        }
 
+        try{
+            client1.getSocket().close();
+            for (int i = 0; i < 10; i++){
+                client1.connect("0.0.0.0", 6444);
+                client1.getSocket().close();
+            }
         } catch (IOException e){}
 
         try{
@@ -87,10 +74,6 @@ public class AppTest
         } catch (InterruptedException e) {
             System.out.println(e);
         }
-
-        tcpServer.getAllClients().forEach(client -> {
-            client.send("Big ass");
-        });
 
         System.out.println("Done");
         System.out.println("Clients total: " + tcpServer.getAllClients().size());
@@ -107,16 +90,24 @@ public class AppTest
 
         System.out.println("testServerSequential");
 
+        TCPClient dummy = new TCPClient();
         TCPServer emulatorUczelni = new TCPServer(7445);
+        emulatorUczelni.setAutoResponse(message -> {
+            String address = message.split(":")[0];
+            int port = Integer.parseInt(message.split(":")[1]);
+            dummy.connect(address, port);
+            dummy.send("Dupa");
+            System.out.println(String.format("Sent to %s:%s given address!", address, port));
+            return "";
+        });
         new Thread(emulatorUczelni).start();
 
         TCPServer tcpServer = new TCPServer(7444);
+        tcpServer.setAutoResponse(message -> {return message;});
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
         TCPClient messenger = new TCPClient("0.0.0.0",7445);
         messenger.send("0.0.0.0" + ":" + 7444);
-
-        TCPClient dummy = new TCPClient();
 
         try{
             System.out.println("Waiting for clients (10s)");
@@ -125,24 +116,7 @@ public class AppTest
             System.out.println(e);
         }
 
-        emulatorUczelni.getAllClients().forEach(client -> {
-            String response = client.get();
-            System.out.println("Response: " + response);
-            String address = response.split(":")[0];
-            int port = Integer.parseInt(response.split(":")[1]);
-
-            dummy.connect(address, port);
-            dummy.send("Dupa");
-            System.out.println("Sent!");
-        });
-
-        tcpServer.getAllClients().forEach(client -> {
-            client.send(client.get());
-        });
-
-        tcpServer.getAllClients().forEach(client -> {
-            client.send(String.valueOf(tcpServer.getAllClients().size()));
-        });
+        tcpServer.setAutoResponse(message -> {return String.valueOf(tcpServer.getAllClients().size());});
 
         /*
         tcpServer.getAllClients().forEach(client -> {
