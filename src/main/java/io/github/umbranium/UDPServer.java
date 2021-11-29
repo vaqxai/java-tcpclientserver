@@ -21,7 +21,7 @@ public class UDPServer extends Thread {
 
 	/**
 	 * Creates a UDP Server at a given port
-	 * @param port
+	 * @param port the port to create the server at
 	 */
 	public UDPServer(int port) {
 		try{
