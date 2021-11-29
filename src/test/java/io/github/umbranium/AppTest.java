@@ -69,8 +69,8 @@ public class AppTest
         } catch (IOException e){}
 
         try{
-            System.out.println("Waiting for clients (10s)");
-            Thread.sleep(10000); // wait for clients
+            System.out.println("Waiting for clients (1s)");
+            Thread.sleep(1000); // wait for clients
         } catch (InterruptedException e) {
             System.out.println(e);
         }
@@ -103,15 +103,14 @@ public class AppTest
         new Thread(emulatorUczelni).start();
 
         TCPServer tcpServer = new TCPServer(7444);
-        tcpServer.setAutoResponse(message -> {return message;});
         new Thread(tcpServer).start(); // don't hold up rest of program.
 
         TCPClient messenger = new TCPClient("0.0.0.0",7445);
         messenger.send("0.0.0.0" + ":" + 7444);
 
         try{
-            System.out.println("Waiting for clients (10s)");
-            Thread.sleep(10000); // wait for clients
+            System.out.println("Waiting for clients (1s)");
+            Thread.sleep(1000); // wait for clients
         } catch (InterruptedException e) {
             System.out.println(e);
         }
@@ -150,6 +149,14 @@ public class AppTest
 
         System.out.println(dummy.get());
         */
+
+    }
+
+    @Test
+    public void TestUDP(){
+
+        UDPServer udpServer = new UDPServer(4444);
+        new Thread(udpServer).start();
 
     }
 }
