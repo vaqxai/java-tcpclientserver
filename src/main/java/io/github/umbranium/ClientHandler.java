@@ -2,6 +2,7 @@ package io.github.umbranium;
 
 import java.io.*;
 import java.net.*;
+import java.util.LinkedList;
 import java.util.function.*;
 
 /**
@@ -11,7 +12,7 @@ public class ClientHandler implements Runnable {
 	private final Socket clientSocket;
 	private BufferedReader input = null;
 	private PrintWriter output = null;
-	private boolean verbose = false;
+	private LinkedList<String> received = new LinkedList<>();
 
 	/**
 	 * Automatic response to this client: if you return "", it will not send a response.
@@ -24,14 +25,6 @@ public class ClientHandler implements Runnable {
 	 */
 	public ClientHandler(Socket socket){
 		this.clientSocket = socket;
-	}
-
-	/**
-	 * Makes this clientHanlder very quiet or very loud. On by default.
-	 * @param shouldBeVerbose should it write out all debug?
-	 */
-	public void setVerbose(boolean shouldBeVerbose){
-		this.verbose = shouldBeVerbose;
 	}
 
 	/**
@@ -89,21 +82,13 @@ public class ClientHandler implements Runnable {
 			String line;
 
 			while ((line = input.readLine()) != null) {
+
 				if(onReceiveMessage != null){
-
-					if(verbose){
-						System.out.println("[" + clientSocket.getInetAddress().getHostAddress() + "] SERVER AT " + clientSocket.getLocalPort() + " RECEVIED '" + line + "'");
-					}
-
-					String response = onReceiveMessage.apply(line); // apply supplied function to every received message.
-
-					if(!response.equals(""))
-						send(response); // auto respond if you get a response
-						if(verbose){
-							System.out.println("[" + clientSocket.getInetAddress().getHostAddress() + "] SERVER AT " + clientSocket.getLocalPort() + " SENDS RESPONSE: '" + response + "' TO ");
-					}
-
+					output.println(onReceiveMessage.apply(line));
 				}
+
+				received.add(line);
+				System.out.println("TCP SERVER ON " + this.getSocket().getLocalPort() + " RECEIVED A MESSAGE: " + line);
 			}
 
 

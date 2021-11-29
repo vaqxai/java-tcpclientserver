@@ -1,17 +1,19 @@
 package io.github.umbranium;
 
 import java.net.*;
+import java.util.LinkedList;
 import java.io.*;
 
 /**
 * TCPClient is the clientside wrapper that can receive and send strings.
  */
-public class TCPClient {
+public class TCPClient extends Thread {
 
 	private Socket socket = null;
 	private BufferedReader input = null;
 	private PrintWriter output = null;
 	private boolean silentMode = false;
+	private LinkedList<String> received = new LinkedList<>();
 
 	public void connect(String address, int port){
 
@@ -24,6 +26,7 @@ public class TCPClient {
 
 				output = new PrintWriter(socket.getOutputStream(), true);
 				input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				new Thread(this).start();
 				break;
 			} catch (IOException e){
 				System.out.println("While connecting to: " + address + ":" + port);
@@ -96,21 +99,28 @@ public class TCPClient {
 	}
 
 	/**
-	 * You can use this method to grab the next line of buffered server response.
-	 * @return the next Line from server feedback
+	 *
+	 * @return oldest received message
 	 */
 	public String get(){
-		
-		if(input == null){
-			System.out.println("Can't receive when unconnected! Connect first!");
+		if(received.size() > 0){
+			return received.removeFirst();
+		} else {
+			System.out.println("Tried to read empty received buffer, returning ''");
 			return "";
 		}
+	}
 
-		try{
-			return input.readLine();
-		} catch (IOException e) {
-			System.out.println(e);
-			return "";
+	public void run() {
+		while(true){
+			if(input != null){
+				try {
+					String receivedStr = input.readLine();
+					received.add(receivedStr);
+				} catch (IOException e) {
+					System.out.println(e);
+				}
+			}
 		}
 	}
 

@@ -37,6 +37,12 @@ public class AppTest
 
         System.out.println("Client's port: " + tcpClient.getOwnPort());
         
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String response = tcpClient.get();
 
         System.out.println("Reponse the client got: " + response);
@@ -108,14 +114,12 @@ public class AppTest
         TCPClient messenger = new TCPClient("0.0.0.0",7445);
         messenger.send("0.0.0.0" + ":" + 7444);
 
-        try{
-            System.out.println("Waiting for clients (1s)");
-            Thread.sleep(1000); // wait for clients
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        }
+        tcpServer.getAllClients().forEach(client -> {
+            System.out.println("Printing for clients");
+            System.out.println(client.get());
+        });
 
-        tcpServer.setAutoResponse(message -> {return String.valueOf(tcpServer.getAllClients().size());});
+        System.out.println("END");
 
         /*
         tcpServer.getAllClients().forEach(client -> {
@@ -157,6 +161,9 @@ public class AppTest
 
         UDPServer udpServer = new UDPServer(4444);
         new Thread(udpServer).start();
+
+        UDPClient udpClient = new UDPClient("localhost", 4444);
+        udpClient.send("Dudududu duuupaaaa\n");
 
     }
 }
