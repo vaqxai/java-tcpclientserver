@@ -12,7 +12,7 @@ public class UDPClient extends Thread {
 	private InetAddress address;
 	private int port;
 	private byte[] buf = new byte[256];
-	private LinkedList<String> received = new LinkedList<>();
+	private LinkedList<Message> received = new LinkedList<>();
 
 
 	/**
@@ -60,12 +60,12 @@ public class UDPClient extends Thread {
 	 * 
 	 * @return the oldest packet data in the receiveds
 	 */
-	public String get(){
+	public Message get(){
 		if (received.size() > 0) {
 			return received.removeFirst();
 		} else {
 			System.out.println("Tried to get data from empty queue, returning nothing.");
-			return "";
+			return null;
 		}
 	}
 
@@ -80,9 +80,9 @@ public class UDPClient extends Thread {
 				socket.receive(packet);
 
 				String receivedStr = new String(packet.getData(), 0, packet.getLength());
-				received.add(receivedStr);
+				received.add(new Message(receivedStr, packet.getAddress().getHostAddress(), packet.getPort()));
 
-				System.out.println("CLIENT RECEIVED PACKET FROM " + packet.getAddress().getHostAddress());
+				System.out.println("CLIENT RECEIVED PACKET FROM " + packet.getAddress().getHostAddress() + ":" + packet.getPort());
 
 			} catch (IOException e) {
 				System.out.println(e);

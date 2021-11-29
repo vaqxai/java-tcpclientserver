@@ -30,22 +30,27 @@ public class App
 
         Scanner waiter = new Scanner(System.in);
 
+        TCPClient initiator = new TCPClient("",0);
+
         UDPServer udpServer = new UDPServer(4444);
         new Thread(udpServer).start();
 
-        UDPClient udpClient = new UDPClient("localhost", 4444);
-        udpClient.send("Dudududu duuupaaaa\n");
+        wait(waiter);
+
+        initiator.send("172.23.129.69:4444\n");
+        initiator.send("\n");
 
         wait(waiter);
 
-        System.out.println("Server got this: " + udpServer.get());
-        udpServer.send("Duuuupaaaaaaaaaaa", "127.0.0.1", udpClient.getSocket().getLocalPort());
+        Message msg = udpServer.get();
+        System.out.print("Server got this: " + msg);
+        udpServer.send("Response", msg.getAddress(), msg.getPort());
 
         wait(waiter);
-
-        System.out.println("Client got this: " + udpClient.get());
 
         waiter.close();
+
+        System.exit(0);
 
     }
 }

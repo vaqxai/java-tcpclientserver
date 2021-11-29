@@ -9,7 +9,7 @@ public class UDPServer extends Thread {
 	private DatagramSocket socket;
 	private boolean running;
 	private byte[] buf = new byte[256];
-	private LinkedList<String> received = new LinkedList<>();
+	private LinkedList<Message> received = new LinkedList<>();
 
 	/**
 	 * 
@@ -45,12 +45,12 @@ public class UDPServer extends Thread {
 	/**
 	 * @return the oldest received packet
 	 */
-	public String get(){
+	public Message get(){
 		if (received.size() > 0) {
 			return received.removeFirst();
 		} else {
 			System.out.println("Tried to get data from empty queue, returning nothing.");
-			return "";
+			return null;
 		}
 	}
 
@@ -94,9 +94,9 @@ public class UDPServer extends Thread {
 
 				InetAddress incomingAdddress = packet.getAddress();
 
-				System.out.println(String.format("SERVER got packet from %s.", incomingAdddress.getHostAddress()));
+				System.out.println(String.format("SERVER got packet from %s:%s.", incomingAdddress.getHostAddress(), packet.getPort()));
 				String receivedStr = new String(packet.getData(), 0, packet.getLength());
-				received.add(receivedStr);
+				received.add(new Message(receivedStr, incomingAdddress.getHostAddress(), packet.getPort()));
 
 			} catch (IOException e) {
 
