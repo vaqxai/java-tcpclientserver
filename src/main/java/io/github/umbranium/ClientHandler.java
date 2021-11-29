@@ -12,7 +12,7 @@ public class ClientHandler implements Runnable {
 	private final Socket clientSocket;
 	private BufferedReader input = null;
 	private PrintWriter output = null;
-	private LinkedList<String> received = new LinkedList<>();
+	private LinkedList<Message> received = new LinkedList<>();
 
 	/**
 	 * Automatic response to this client: if you return "", it will not send a response.
@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable {
 					output.println(onReceiveMessage.apply(line));
 				}
 
-				received.add(line);
+				received.add(new Message(line, clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()));
 				System.out.println("TCP SERVER ON " + this.getSocket().getLocalPort() + " RECEIVED A MESSAGE: " + line);
 			}
 

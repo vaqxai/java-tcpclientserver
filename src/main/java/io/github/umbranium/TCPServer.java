@@ -13,6 +13,9 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	private int port;
 	private ServerSocket server = null;
 	private boolean silentMode = false;
+		/**
+	 * The data in TCP messages has no line terminators.
+	 */
 	private ArrayList<ClientHandler> connectedClients = new ArrayList<>();
 
 	/**

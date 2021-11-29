@@ -12,6 +12,9 @@ public class UDPClient extends Thread {
 	private InetAddress address;
 	private int port;
 	private byte[] buf = new byte[256];
+	/**
+	 * The data in UDP messages is unprocessed, it may have line terminators, etc.
+	 */
 	private LinkedList<Message> received = new LinkedList<>();
 
 

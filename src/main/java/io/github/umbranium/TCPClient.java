@@ -13,7 +13,10 @@ public class TCPClient extends Thread {
 	private BufferedReader input = null;
 	private PrintWriter output = null;
 	private boolean silentMode = false;
-	private LinkedList<String> received = new LinkedList<>();
+		/**
+	 * The data in TCP messages has no line terminators.
+	 */
+	private LinkedList<Message> received = new LinkedList<>();
 
 	public void connect(String address, int port){
 
@@ -102,12 +105,12 @@ public class TCPClient extends Thread {
 	 *
 	 * @return oldest received message
 	 */
-	public String get(){
+	public Message get(){
 		if(received.size() > 0){
 			return received.removeFirst();
 		} else {
 			System.out.println("Tried to read empty received buffer, returning ''");
-			return "";
+			return null;
 		}
 	}
 
@@ -116,7 +119,7 @@ public class TCPClient extends Thread {
 			if(input != null){
 				try {
 					String receivedStr = input.readLine();
-					received.add(receivedStr);
+					received.add(new Message(receivedStr, socket.getInetAddress().getHostAddress(), socket.getPort()));
 				} catch (IOException e) {
 					System.out.println(e);
 				}

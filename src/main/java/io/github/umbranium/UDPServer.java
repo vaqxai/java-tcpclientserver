@@ -9,6 +9,9 @@ public class UDPServer extends Thread {
 	private DatagramSocket socket;
 	private boolean running;
 	private byte[] buf = new byte[256];
+	/**
+	 * The data in UDP messages is unprocessed, it may have line terminators, etc.
+	 */
 	private LinkedList<Message> received = new LinkedList<>();
 
 	/**
