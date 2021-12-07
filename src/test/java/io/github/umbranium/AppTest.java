@@ -43,7 +43,7 @@ public class AppTest
             e.printStackTrace();
         }
 
-        String response = tcpClient.get();
+        String response = tcpClient.get().toString();
 
         System.out.println("Reponse the client got: " + response);
 
