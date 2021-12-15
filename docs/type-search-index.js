@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"io.github.umbranium","l":"App"},{"p":"io.github.umbranium","l":"ClientHandler"},{"p":"io.github.umbranium","l":"TCPClient"},{"p":"io.github.umbranium","l":"TCPServer"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"io.github.vaqxai","l":"App"},{"p":"io.github.vaqxai","l":"ClientHandler"},{"p":"io.github.vaqxai","l":"TCPClient"},{"p":"io.github.vaqxai","l":"TCPServer"}]

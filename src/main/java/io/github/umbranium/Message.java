@@ -1,4 +1,4 @@
-package io.github.umbranium;
+package io.github.vaqxai;
 
 public class Message {
 

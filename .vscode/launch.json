@@ -14,7 +14,7 @@
 			"type": "java",
 			"name": "Launch App",
 			"request": "launch",
-			"mainClass": "io.github.umbranium.App",
+			"mainClass": "io.github.vaqxai.App",
 			"projectName": "tcpclientserver"
 		}
 	]

@@ -1,4 +1,4 @@
-package io.github.umbranium;
+package io.github.vaqxai;
 
 import java.util.ArrayList;
 import java.util.Scanner;

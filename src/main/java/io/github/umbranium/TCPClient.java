@@ -1,4 +1,4 @@
-package io.github.umbranium;
+package io.github.vaqxai;
 
 import java.net.*;
 import java.util.LinkedList;

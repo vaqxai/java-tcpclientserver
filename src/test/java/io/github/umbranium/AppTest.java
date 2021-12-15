@@ -1,4 +1,4 @@
-package io.github.umbranium;
+package io.github.vaqxai;
 
 import static org.junit.Assert.assertTrue;
 import java.io.IOException;

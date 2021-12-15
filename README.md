@@ -7,7 +7,7 @@ Simple TCP Client + Server wrappers to handle string processing.
 
 ```
 <dependency>
-  <groupId>io.github.umbranium</groupId>
+  <groupId>io.github.vaqxai</groupId>
   <artifactId>tcpclientserver</artifactId>
   <version>1.1.2</version>
 </dependency>
