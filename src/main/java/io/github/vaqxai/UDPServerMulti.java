@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class UDPServerMulti extends UDPServer {
