@@ -4,11 +4,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import org.junit.Test;
 
-import io.github.vaqxai.TCPClient;
-import io.github.vaqxai.TCPServer;
-import io.github.vaqxai.UDPClient;
-import io.github.vaqxai.UDPServer;
-
 /**
  * Unit test for simple App.
  */
