@@ -12,7 +12,7 @@ public class UDPServerMulti extends UDPServer {
 	 * Key = Sender's address:port
 	 * Val = Message
 	 */
-	private HashMap<String, ArrayList<Message>> receivedBySenders;
+	private HashMap<String, ArrayList<Message>> receivedBySenders = new HashMap<>();
 
 	/**
 	 * 
