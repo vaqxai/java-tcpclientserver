@@ -88,7 +88,7 @@ public class UDPServerMulti extends UDPServer {
 
 				String incAddrStr = incomingAdddress.getHostAddress() + ":" + packet.getPort();
 
-				if(!receivedBySenders.keySet().contains(incAddrStr)){
+				if(receivedBySenders.size() > 0 && !receivedBySenders.keySet().contains(incAddrStr)){
 					receivedBySenders.put(incAddrStr, new ArrayList<Message>());
 				}
 
