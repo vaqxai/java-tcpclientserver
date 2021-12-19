@@ -36,17 +36,17 @@ public class App
     public static void main( String[] args )
     {
 
-        Scanner waiter = new Scanner(System.in);
+        Scanner waiter = new Scanner(System.in); // Do ręcznego oczekiwania
 
-        TCPClient initiator = new TCPClient("172.21.48.15",34168);
+        TCPClient initiator = new TCPClient("172.21.48.64",34168); // Adres serwera TCP z zadania
 
-        UDPServer udpServer = new UDPServer(4444);
-        new Thread(udpServer).start();
+        UDPServerMulti udpServer = new UDPServerMulti(4444); // Tworzenie naszego serwera UDP
+        new Thread(udpServer).start(); // Startowanie naszego serwera UDP
 
-        initiator.send("190435");
-        initiator.send("172.23.129.109:4444");
+        initiator.send("157047"); // Flaga poczatkowa
+        initiator.send("172.23.129.66:4444"); // Adres naszego serwera UDP
 
-        wait(300);
+        wait(300); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
 
 
 
