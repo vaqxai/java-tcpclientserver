@@ -23,6 +23,8 @@ public class UDPServerMulti extends UDPServer {
 	}
 
 	public int countConnectedClients(){
+		if (receivedBySenders.size() == 0) { return 0; }
+		if (receivedBySenders.keySet().size() == 0) { return 0; }
 		return receivedBySenders.keySet().size();
 	}
 

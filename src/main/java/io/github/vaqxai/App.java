@@ -48,7 +48,7 @@ public class App
 
         wait(300); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
 
-
+        System.out.println("Total connected distinct UDP clients: " + udpServer.countConnectedClients());
 
         /*
         Message msg = udpServer.get();
