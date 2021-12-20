@@ -2,6 +2,7 @@ package io.github.vaqxai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 /**
@@ -24,16 +25,17 @@ public class App
         }
     }
 
-    private static int nwd(int a, int b) { return a == 0 ? b : nwd(b % a, a); }
+    private static long nwd(long a, long b) { return a == 0 ? b : nwd(b % a, a); }
 
-    private static int nwd(ArrayList<Integer> ints){
-        int res = 0;
-        for(int elem : ints){
+    private static long nwd(ArrayList<Long> nums){
+        long res = 0;
+        for(long elem : nums){
             res = nwd(res, elem);
             if (res == 1) return 1;
         }
         return res;
     }
+
     public static void main( String[] args )
     {
 
@@ -49,20 +51,81 @@ public class App
 
         wait(300); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
 
+
         System.out.println("Total connected distinct UDP clients: " + udpServer.countConnectedClients());
 
         List<String> allConnectedClientStrs = udpServer.getAllClientAddrStrs();
 
-        for(String clientAddr : allConnectedClientStrs){
-            System.out.println("Client " + clientAddr + " sent " + udpServer.countClientsMessages(clientAddr) + " message(s).");
+        ArrayList<Long> initialNumbers = new ArrayList<>();
+
+        // Add "First contact" numbers to a list to be used later.
+        udpServer.respondToAllByLast((msg) -> {
+        String msgSanitized = msg.getData().replaceAll("\n","");
+        Long msgNum = Long.parseLong(msgSanitized);
+        initialNumbers.add(msgNum);
+        return msg.getData();
+        });
+
+        udpServer.getReceivedList().keySet().removeAll(udpServer.getReceivedList().keySet()); // purge
+        System.out.println("We responded to each of them. And purged the sender list");
+
+        wait(100); // poczekamy na lagi uczelni
+
+        udpServer.respondToAllByLast((msg) -> {
+            return msg.getData();
+        });
+
+        System.out.println("We responded with the same message we got from them.");
+
+        wait(100);
+
+        for(String senderAddr : udpServer.getReceivedList().keySet()){
+            ArrayList<Long> toNWD = new ArrayList<>();
+            for(Message msg : udpServer.getReceivedList().get(senderAddr)){
+                String strSan = msg.getData().replaceAll("\n","");
+                Long strLng = Long.parseLong(strSan);
+                toNWD.add(strLng);
+            }
+            udpServer.getReceivedList().get(senderAddr).clear(); // purge the queue
+
+            Long nwdLng = nwd(toNWD);
+            System.out.println(nwdLng);
+            udpServer.send(nwdLng + "\n", senderAddr.split(":")[0], Integer.parseInt(senderAddr.split(":")[1]));
+            System.out.println("We responded by calculating an NWD from all the " + senderAddr + " client's messages.");
         }
 
-        udpServer.respondToAllByLast((msg) -> {return msg.getData();});
-        System.out.println("We responded to each of them.");
+        wait(100);
 
-        wait(300); // poczekamy na lagi uczelni
+        udpServer.respondToAllByLast((msg) -> {
+            return msg.getData().replaceAll("4","");
+        });
+        System.out.println("We responded by removing all occurences of '4' and replying with that.");
 
+        wait(100);
 
+        udpServer.respondToAllByLast((msg) -> {
+            long msgLng = Long.parseLong(msg.getData().replaceAll("\n",""));
+            int k = 0;
+            while(Math.pow(k+1,5) < msgLng){
+                k++;
+            }
+            return k + "\n";
+        });
+        System.out.println("We responded by calculating such a number, that when raised to its' 5th power, it was less than what we got.");
+
+        Long sum = 0l;
+        for(Long l : initialNumbers){
+            sum+=l;
+        }
+        udpServer.respondToAll(sum + "\n");
+        System.out.println("We sent the sum of the initial-communication numbers.");
+
+        udpServer.respondToAll(nwd(initialNumbers) + "\n");
+        System.out.println("We sent the nwd of the initial-communication numbers.");
+
+        wait(100);
+
+        System.out.println("And we got the final flaggg ^");
 
         /*
         Message msg = udpServer.get();

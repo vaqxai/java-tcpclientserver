@@ -78,6 +78,7 @@ public class UDPServer extends Thread {
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, destination, port);
 		try {
 		socket.send(packet);
+		System.out.println("SERVER sent packet to " + address + ":" + port);
 		} catch (IOException e) {
 			System.out.println(e);
 		}

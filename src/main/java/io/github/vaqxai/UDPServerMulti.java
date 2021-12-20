@@ -13,13 +13,13 @@ public class UDPServerMulti extends UDPServer {
 	 * Key = Sender's address:port
 	 * Val = Message
 	 */
-	private HashMap<String, ArrayList<Message>> receivedBySenders = new HashMap<>();
+	private HashMap<String, Queue<Message>> receivedBySenders = new HashMap<>();
 
 	/**
 	 * 
 	 * @return Key = Sender address:port, Val = Message
 	 */
-	public HashMap<String, ArrayList<Message>> getReceivedList(){
+	public HashMap<String, Queue<Message>> getReceivedList(){
 		return receivedBySenders;
 	}
 
@@ -67,18 +67,34 @@ public class UDPServerMulti extends UDPServer {
 	}
 
 	/**
-	 * Sends result of callback function back to each "connected" client.
+	 * Sends result of callback function back to each "connected" client. If successful, the message is removed from the queue.
 	 * @param callback Function which takes the last received message from this client and then returns a response. If it returns null, no response will be sent to the client.
 	 */
 	public void respondToAllByLast(Function<Message, String> callback){
 		for (String senderAddr : receivedBySenders.keySet()){ // for each sender
 			String toSendAddr = senderAddr.split(":")[0];
 			String toSendPort = senderAddr.split(":")[1];
-			ArrayList<Message> messagesOfSender = receivedBySenders.get(senderAddr);
-			Message msg = messagesOfSender.get(messagesOfSender.size() - 1); // get youngest message
+			Queue<Message> messagesOfSender = receivedBySenders.get(senderAddr);
+			Message msg = messagesOfSender.peek(); // get youngest message
 			String response = callback.apply(msg);
 			if(response != null){
+				messagesOfSender.remove(); // remove younget message
 				this.send(callback.apply(msg), toSendAddr, Integer.parseInt(toSendPort));
+			}
+		}
+	}
+
+	/**
+	 * Sends result of callback function back to each "connected" client, if that result is not null.
+	 * @param callback Function which takes all received messages as a queue, and returns a reeponse.
+	 */
+	public void respondToAllQueue(Function<Queue<Message>, String> callback){
+		for (String senderAddr : receivedBySenders.keySet()){ // for each sender
+			String toSendAddr = senderAddr.split(":")[0];
+			String toSendPort = senderAddr.split(":")[1];
+			String response = callback.apply(receivedBySenders.get(senderAddr));
+			if(response != null){
+				this.send(response, toSendAddr, Integer.parseInt(toSendPort));
 			}
 		}
 	}
@@ -86,8 +102,8 @@ public class UDPServerMulti extends UDPServer {
 	public List<Message> getLastMessages(){
 		ArrayList<Message> lastMessages = new ArrayList<>();
 		for (String senderAddr : receivedBySenders.keySet()){
-			ArrayList<Message> messagesOfSender = receivedBySenders.get(senderAddr);
-			Message msg = messagesOfSender.get(messagesOfSender.size() - 1); // get youngest message
+			Queue<Message> messagesOfSender = receivedBySenders.get(senderAddr);
+			Message msg = messagesOfSender.peek(); // get youngest message
 			lastMessages.add(msg);
 		}
 		return lastMessages;
@@ -112,13 +128,14 @@ public class UDPServerMulti extends UDPServer {
 				InetAddress incomingAdddress = packet.getAddress();
 
 				String receivedStr = new String(packet.getData(), 0, packet.getLength());
+				String receivedStrNice = receivedStr.replaceAll("\n","\\n");
 
-				System.out.println(String.format("SERVER got packet from %s:%s, contents: %s", incomingAdddress.getHostAddress(), packet.getPort(), receivedStr));
+				System.out.println(String.format("SERVER got packet from %s:%s, contents: %s", incomingAdddress.getHostAddress(), packet.getPort(), receivedStrNice));
 
 				String incAddrStr = incomingAdddress.getHostAddress() + ":" + packet.getPort();
 
 				if(receivedBySenders.size() == 0 || !receivedBySenders.containsKey(incAddrStr)){
-					receivedBySenders.put(incAddrStr, new ArrayList<Message>());
+					receivedBySenders.put(incAddrStr, new LinkedList<Message>());
 				}
 
 				receivedBySenders.get(incAddrStr).add(new Message(receivedStr, incomingAdddress.getHostAddress(), packet.getPort()));
