@@ -79,7 +79,7 @@ public class UDPServerMulti extends UDPServer {
 			String response = callback.apply(msg);
 			if(response != null){
 				messagesOfSender.remove(); // remove younget message
-				this.send(callback.apply(msg), toSendAddr, Integer.parseInt(toSendPort));
+				this.send(response, toSendAddr, Integer.parseInt(toSendPort));
 			}
 		}
 	}

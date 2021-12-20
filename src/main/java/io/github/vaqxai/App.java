@@ -41,16 +41,15 @@ public class App
 
         Scanner waiter = new Scanner(System.in); // Do ręcznego oczekiwania
 
-        TCPClient initiator = new TCPClient("172.21.48.64",34168); // Adres serwera TCP z zadania
+        TCPClient initiator = new TCPClient("172.21.48.200",39799); // Adres serwera TCP z zadania
 
         UDPServerMulti udpServer = new UDPServerMulti(4444); // Tworzenie naszego serwera UDP
         new Thread(udpServer).start(); // Startowanie naszego serwera UDP
 
-        initiator.send("157047"); // Flaga poczatkowa
-        initiator.send("172.23.129.66:4444"); // Adres naszego serwera UDP
+        initiator.send("155262"); // Flaga poczatkowa
+        initiator.send("172.23.129.20:4444"); // Adres naszego serwera UDP
 
-        wait(300); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
-
+        wait(1000); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
 
         System.out.println("Total connected distinct UDP clients: " + udpServer.countConnectedClients());
 
@@ -72,10 +71,31 @@ public class App
         wait(100); // poczekamy na lagi uczelni
 
         udpServer.respondToAllByLast((msg) -> {
+            initialNumbers.add(Long.parseLong(msg.getData().replaceAll("\n","")));
             return msg.getData();
         });
 
         System.out.println("We responded with the same message we got from them.");
+
+        wait(100);
+
+        udpServer.respondToAll("4444\n");
+
+        System.out.println("We sent our port number.");
+
+        udpServer.respondToAll(nwd(initialNumbers) + "\n");
+        System.out.println("We sent the nwd of the initial-communication numbers.");
+
+        udpServer.respondToAll("2\n");
+        System.out.println("We sent count of connected clients.");
+
+        wait(100); 
+
+        udpServer.respondToAllByLast((msg) -> {
+            String sanMsg = msg.getData().replaceAll("\n","");
+            return sanMsg + sanMsg + "\n";
+        });
+        System.out.println("We responded with the client's message, back to back 2 times.");
 
         wait(100);
 
@@ -96,10 +116,36 @@ public class App
 
         wait(100);
 
+        System.out.println("And we got the final flaggg ^");
+
+        /*
+
         udpServer.respondToAllByLast((msg) -> {
-            return msg.getData().replaceAll("4","");
+            return msg.getData().replaceAll("2","");
         });
-        System.out.println("We responded by removing all occurences of '4' and replying with that.");
+        System.out.println("We responded by removing all occurences of '2' and replying with that.");
+
+        wait(100);
+
+        Long sum = 0l;
+        for(Long l : initialNumbers){
+            sum+=l;
+        }
+        udpServer.respondToAll(sum + "\n");
+        System.out.println("We sent the sum of the initial-communication numbers.");
+
+        wait(100);
+
+        udpServer.respondToAllByLast((msg) -> {
+            String sanMsg = msg.getData().replaceAll("\n","");
+            return sanMsg + sanMsg + sanMsg + sanMsg + sanMsg + "\n";
+        });
+        System.out.println("We responded with the client's message, back to back 5 times.");
+
+        wait(100);
+
+        udpServer.respondToAll(nwd(initialNumbers) + "\n");
+        System.out.println("We sent the nwd of the initial-communication numbers.");
 
         wait(100);
 
@@ -112,21 +158,7 @@ public class App
             return k + "\n";
         });
         System.out.println("We responded by calculating such a number, that when raised to its' 5th power, it was less than what we got.");
-
-        Long sum = 0l;
-        for(Long l : initialNumbers){
-            sum+=l;
-        }
-        udpServer.respondToAll(sum + "\n");
-        System.out.println("We sent the sum of the initial-communication numbers.");
-
-        udpServer.respondToAll(nwd(initialNumbers) + "\n");
-        System.out.println("We sent the nwd of the initial-communication numbers.");
-
-        wait(100);
-
-        System.out.println("And we got the final flaggg ^");
-
+        */
         /*
         Message msg = udpServer.get();
         String msgReplaced = msg.toString().replaceAll("9","");
