@@ -57,7 +57,7 @@ public class App
             System.out.println("Client " + clientAddr + " sent " + udpServer.countClientsMessages(clientAddr) + " message(s).");
         }
 
-        udpServer.respondToAllByLast((msg) -> {return msg;});
+        udpServer.respondToAllByLast((msg) -> {return msg.getData();});
         System.out.println("We responded to each of them.");
 
         wait(300); // poczekamy na lagi uczelni
