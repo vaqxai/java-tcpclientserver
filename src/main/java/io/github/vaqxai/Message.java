@@ -27,5 +27,9 @@ public class Message {
 	public String toString(){
 		return data;
 	}
+
+	public String getAddrStr(){
+		return address + ":" + port;
+	}
 	
 }

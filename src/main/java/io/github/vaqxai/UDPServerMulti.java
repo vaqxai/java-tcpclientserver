@@ -70,13 +70,13 @@ public class UDPServerMulti extends UDPServer {
 	 * Sends result of callback function back to each "connected" client.
 	 * @param callback Function which takes the last received message from this client and then returns a response
 	 */
-	public void respondToAllByLast(Function<String, String> callback){
+	public void respondToAllByLast(Function<Message, String> callback){
 		for (String senderAddr : receivedBySenders.keySet()){ // for each sender
 			String toSendAddr = senderAddr.split(":")[0];
 			String toSendPort = senderAddr.split(":")[1];
 			ArrayList<Message> messagesOfSender = receivedBySenders.get(senderAddr);
 			Message msg = messagesOfSender.get(messagesOfSender.size() - 1); // get youngest message
-			this.send(callback.apply(msg.getData()), toSendAddr, Integer.parseInt(toSendPort));
+			this.send(callback.apply(msg), toSendAddr, Integer.parseInt(toSendPort));
 		}
 	}
 
