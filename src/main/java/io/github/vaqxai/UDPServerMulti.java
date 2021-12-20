@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class UDPServerMulti extends UDPServer {
 
@@ -26,6 +27,31 @@ public class UDPServerMulti extends UDPServer {
 		if (receivedBySenders.size() == 0) { return 0; }
 		if (receivedBySenders.keySet().size() == 0) { return 0; }
 		return receivedBySenders.keySet().size();
+	}
+
+	/**
+	 * 
+	 * @param addrStr address:port of a given client
+	 * @return the amount of messages received from this client
+	 */
+	public int countClientsMessages(String addrStr){
+		if(receivedBySenders.containsKey(addrStr)){
+			return receivedBySenders.get(addrStr).size();
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * 
+	 * @return all connected clients' address:port strings
+	 */
+	public List<String> getAllClientAddrStrs(){
+		if(receivedBySenders.size() > 0){
+			return receivedBySenders.keySet().stream().collect(Collectors.toList());
+		} else {
+			return new ArrayList<>();
+		}
 	}
 
 	/**
@@ -88,7 +114,7 @@ public class UDPServerMulti extends UDPServer {
 
 				String incAddrStr = incomingAdddress.getHostAddress() + ":" + packet.getPort();
 
-				if(receivedBySenders.size() == 0 || !receivedBySenders.keySet().contains(incAddrStr)){
+				if(receivedBySenders.size() == 0 || !receivedBySenders.containsKey(incAddrStr)){
 					receivedBySenders.put(incAddrStr, new ArrayList<Message>());
 				}
 

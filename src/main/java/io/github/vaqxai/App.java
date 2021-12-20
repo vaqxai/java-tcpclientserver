@@ -1,6 +1,7 @@
 package io.github.vaqxai;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -49,6 +50,12 @@ public class App
         wait(300); // Moment na synchronizacje, i odczekanie na ew. laga po stronie uczelni
 
         System.out.println("Total connected distinct UDP clients: " + udpServer.countConnectedClients());
+
+        List<String> allConnectedClientStrs = udpServer.getAllClientAddrStrs();
+
+        for(String clientAddr : allConnectedClientStrs){
+            System.out.println("Client " + clientAddr + " sent " + udpServer.countClientsMessages(clientAddr) + " message(s).");
+        }
 
         /*
         Message msg = udpServer.get();
