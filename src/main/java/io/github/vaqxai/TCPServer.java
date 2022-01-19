@@ -94,7 +94,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 				if(!silentMode)
 					System.out.println(String.format("CLIENT CONN [%s]", client.getInetAddress().getHostAddress()));
 
-				ClientHandler clientSock = new ClientHandler(client);
+				ClientHandler clientSock = new ClientHandler(client, silentMode);
 
 				if(callbackFunction != null){
 					clientSock.setAutoResponse(callbackFunction);

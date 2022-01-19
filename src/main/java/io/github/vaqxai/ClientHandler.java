@@ -10,6 +10,7 @@ import java.util.function.*;
  */
 public class ClientHandler implements Runnable {
 	private final Socket clientSocket;
+	private boolean silent = false;
 	private BufferedReader input = null;
 	private PrintWriter output = null;
 	private LinkedList<Message> received = new LinkedList<>();
@@ -22,9 +23,11 @@ public class ClientHandler implements Runnable {
 	/**
 	 * Creates a ClientHandler with the provided server socket, and a response callback.
 	 * @param socket the connected client's socket instance
+	 * @param silent should it be silent
 	 */
-	public ClientHandler(Socket socket){
+	public ClientHandler(Socket socket, boolean silent){
 		this.clientSocket = socket;
+		this.silent = silent;
 	}
 
 	/**
@@ -88,7 +91,8 @@ public class ClientHandler implements Runnable {
 				}
 
 				received.add(new Message(line, clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()));
-				System.out.println("TCP SERVER ON " + this.getSocket().getLocalPort() + " RECEIVED A MESSAGE: " + line);
+				if (!this.silent)
+					System.out.println("TCP SERVER ON " + this.getSocket().getLocalPort() + " RECEIVED A MESSAGE: " + line);
 			}
 
 

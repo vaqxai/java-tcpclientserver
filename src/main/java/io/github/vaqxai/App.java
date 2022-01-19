@@ -116,7 +116,9 @@ public class App
 
         wait(100);
 
-        System.out.println("And we got the final flaggg ^");
+        for(Queue<Message> q : udpServer.getReceivedList().values()){
+            System.out.println("Final flag: " + q.remove().getData());
+        }
 
         /*
 

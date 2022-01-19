@@ -7,12 +7,21 @@ import java.util.LinkedList;
 public class UDPServer extends Thread {
 
 	protected DatagramSocket socket;
+	protected boolean silent;
 	protected boolean running;
 	protected byte[] buf = new byte[256];
 	/**
 	 * The data in UDP messages is unprocessed, it may have line terminators, etc.
 	 */
 	protected LinkedList<Message> received = new LinkedList<>();
+
+	/**
+	 * Un/silences the program
+	 * @param shouldBeSilent should we print messages
+	 */
+	public void setSilentMode(boolean shouldBeSilent){
+		this.silent = shouldBeSilent;
+	}
 
 	/**
 	 * 
@@ -52,7 +61,8 @@ public class UDPServer extends Thread {
 		if (received.size() > 0) {
 			return received.removeFirst();
 		} else {
-			System.out.println("Tried to get data from empty queue, returning nothing.");
+			if (!this.silent)
+				System.out.println("Tried to get data from empty queue, returning nothing.");
 			return null;
 		}
 	}
@@ -69,7 +79,8 @@ public class UDPServer extends Thread {
 		try {
 			destination = InetAddress.getByName(address);
 		} catch (UnknownHostException e) {
-			System.out.println(String.format("Unknown host %s:%s while sending packet, aborting.", address, port));
+			if(!this.silent)
+				System.out.println(String.format("Unknown host %s:%s while sending packet, aborting.", address, port));
 			return;
 		}
 
@@ -78,7 +89,8 @@ public class UDPServer extends Thread {
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, destination, port);
 		try {
 		socket.send(packet);
-		System.out.println("SERVER sent packet to " + address + ":" + port);
+		if(!this.silent)
+			System.out.println("SERVER sent packet to " + address + ":" + port);
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -88,6 +100,7 @@ public class UDPServer extends Thread {
 	public void run() {
 		running = true;
 
+		if(!this.silent)
 		System.out.println("UDP SERVER START");
 
 		while(running) {
@@ -100,7 +113,8 @@ public class UDPServer extends Thread {
 				InetAddress incomingAdddress = packet.getAddress();
 
 				String receivedStr = new String(packet.getData(), 0, packet.getLength());
-				System.out.println(String.format("SERVER got packet from %s:%s, contents: %s", incomingAdddress.getHostAddress(), packet.getPort(), receivedStr));
+				if(!this.silent)
+					System.out.println(String.format("SERVER got packet from %s:%s, contents: %s", incomingAdddress.getHostAddress(), packet.getPort(), receivedStr));
 				received.add(new Message(receivedStr, incomingAdddress.getHostAddress(), packet.getPort()));
 
 			} catch (IOException e) {
@@ -110,7 +124,8 @@ public class UDPServer extends Thread {
 			}
 		}
 
-		System.out.println("UDP SERVER STOPPED");
+		if(!this.silent)
+			System.out.println("UDP SERVER STOPPED");
 
 	}
 	
