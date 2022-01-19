@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
 	/**
 	 * Automatic response to this client: if you return "", it will not send a response.
 	 */
-	private Function<String, String> onReceiveMessage = null;
+	private BiFunction<Socket, String, String> onReceiveMessage = null;
 
 	/**
 	 * Creates a ClientHandler with the provided server socket, and a response callback.
@@ -34,7 +34,7 @@ public class ClientHandler implements Runnable {
 	 * Changes this server's client's automatic response callback
 	 * @param newCallback the new callback, return "" to stop the server from sending an automatic response.
 	 */
-	public void setAutoResponse(Function<String,String> newCallback){
+	public void setAutoResponse(BiFunction<Socket, String, String> newCallback){
 		this.onReceiveMessage = newCallback;
 	}
 
@@ -42,7 +42,7 @@ public class ClientHandler implements Runnable {
 	 * 
 	 * @return the current callback function
 	 */
-	public Function<String, String> getAutoResponse(){
+	public BiFunction<Socket, String, String> getAutoResponse(){
 		return this.onReceiveMessage;
 	}
 
@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable {
 			while ((line = input.readLine()) != null) {
 
 				if(onReceiveMessage != null){
-					output.println(onReceiveMessage.apply(line));
+					output.println(onReceiveMessage.apply(clientSocket, line));
 				}
 
 				received.add(new Message(line, clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()));

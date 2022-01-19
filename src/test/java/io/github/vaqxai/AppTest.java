@@ -27,7 +27,7 @@ public class AppTest
         System.out.println("testClientServer");
 
         TCPServer tcpServer = new TCPServer(4447);
-        tcpServer.setAutoResponse(message -> {
+        tcpServer.setAutoResponse((sock, message) -> {
             return "You have sent: " + message + " to our server.";
         });
         new Thread(tcpServer).start(); // don't hold up rest of program.

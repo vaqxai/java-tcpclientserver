@@ -21,7 +21,7 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	/**
 	 * Default callback function for all clients. If you return "", no response will be sent back.
 	 */
-	private Function<String, String> callbackFunction = null;
+	private BiFunction<Socket, String, String> callbackFunction = null;
 
 	/**
 	 * Creates a server instance, one which will reply to all incoming requests putting them through the given callback function
@@ -35,11 +35,11 @@ public class TCPServer implements Runnable { // runnable so it doesn't block res
 	 * Changes the server's autoresponse
 	 * @param newCallback will be called whenever a client sends us a message. If you return "" no response will be sent back.
 	 */
-	public void setAutoResponse(Function<String, String> newCallback){
+	public void setAutoResponse(BiFunction<Socket, String, String> newCallback){
 		this.callbackFunction = newCallback;
 	}
 
-	public Function<String, String> getAutoResponse(){
+	public BiFunction<Socket, String, String> getAutoResponse(){
 		return this.callbackFunction;
 	}
 
