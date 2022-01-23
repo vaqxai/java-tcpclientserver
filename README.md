@@ -9,7 +9,7 @@ Simple TCP Client + Server wrappers to handle string processing.
 <dependency>
   <groupId>io.github.vaqxai</groupId>
   <artifactId>tcpclientserver</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 </dependency>
 ```
 
